@@ -1,0 +1,66 @@
+[gd_scene load_steps=7 format=3 uid="uid://cr8l8p2i5xxxj"]
+
+[ext_resource type="Script" path="res://Scripts/falling_platfmor.gd" id="1_exepe"]
+[ext_resource type="Texture2D" uid="uid://lw8xi86rx3wy" path="res://brick-pieces/falling-platform-brown.png" id="1_m62h2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tp70w"]
+size = Vector2(32, 16)
+
+[sub_resource type="Animation" id="Animation_8ww0c"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ssiay"]
+resource_name = "shake"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(2, 0), Vector2(0, 0), Vector2(-2, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rxgjc"]
+_data = {
+"RESET": SubResource("Animation_8ww0c"),
+"shake": SubResource("Animation_ssiay")
+}
+
+[node name="falling_platform" type="AnimatableBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_exepe")
+
+[node name="texture" type="Sprite2D" parent="."]
+texture = ExtResource("1_m62h2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("RectangleShape2D_tp70w")
+one_way_collision = true
+
+[node name="respawn-timer" type="Timer" parent="."]
+
+[node name="anim" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rxgjc")
+}
+
+[connection signal="animation_finished" from="anim" to="." method="_on_anim_animation_finished"]
